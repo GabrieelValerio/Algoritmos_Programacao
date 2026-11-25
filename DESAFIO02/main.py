@@ -1,7 +1,19 @@
+import os    
 conf = True
 
 livros = []
 usuarios = []
+
+categorias = (
+    "Romance",
+    "Ficção",
+    "Fantasia",
+    "Suspense",
+    "Terror",
+    "Biografia",
+    "Acadêmico",
+    "História"
+)
 
 livro = {
     "codigo": 0,
@@ -18,15 +30,93 @@ usuario = {
     "vinculo": ""
 }
 
+def limpar_tela():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def cadastrar_livro():
-    livro["codigo"] = int(input("Informe o código do livro: "))
-    livro["titulo"] = input("Informe o título do livro: ")
-    livro["autor"] = input("Informe o autor do livro: ")
-    livro["categoria"] = input("Informe a categoria do livro: ")
-    livro["quantidade"] = int(input("Informe a quantidade de exemplares: "))
-    livros.append(livro.copy())
+    limpar_tela()
+
+    novo_livro = {
+        "codigo": 0,
+        "titulo": "",
+        "autor": "",
+        "categoria": "",
+        "quantidade": 0,
+        "quantidade_disponivel": 0
+    }
+
+    while True:
+        codigo = int(input("Informe o código do livro: "))
+
+        codigo_existe = False
+
+        for livro in livros:
+            if livro["codigo"] == codigo:
+                codigo_existe = True
+                break
+
+        if codigo_existe:
+            print("ERRO: Código já cadastrado!")
+        else:
+            break
+    novo_livro["codigo"] = codigo
+
+    while True:
+        titulo = input("Informe o título do livro: ")
+
+        if titulo.strip() == "":
+            print("ERRO: O título é obrigatório!")
+        else:
+            break
+    novo_livro["titulo"] = titulo
+
+    while True:
+        autor = input("Informe o nome do autor: ")
+
+        if autor.strip() == "":
+            print("ERRO: O nome do autor é obrigatório!")
+        else:
+            break
+    novo_livro["autor"] = autor
+
+    while True:
+        try:
+            quantidade = int(input("Informe a quantidade total de exemplares: "))
+
+            if quantidade > 0:
+                break
+            else:
+                print("ERRO: A quantidade deve ser maior que zero!")
+
+        except ValueError:
+            print("ERRO: Digite um número inteiro!")
+
+    while True:
+        for i, categoria in enumerate(categorias, start=1):
+            print(f"{i} - {categoria}")
+
+        try:
+            opcao = int(input("Escolha a categoria do livro: "))
+
+            if 1 <= opcao <= len(categorias):
+                novo_livro["categoria"] = categorias[opcao - 1]
+                break
+            else:
+                print("ERRO: Opção inválida!")
+
+        except ValueError:
+            print("ERRO: Digite um número inteiro!")
+    novo_livro["categoria"] = categorias[opcao - 1]
+
+    novo_livro["quantidade"] = quantidade
+    novo_livro["quantidade_disponivel"] = quantidade
+
+    livros.append(novo_livro.copy())
+    print("Livro cadastrado com sucesso!")
+
 
 def cadastrar_usuario():
+    limpar_tela()
     usuario["codigo"] = int(input("Informe o código do usuário: "))
     usuario["nome"] = input("Informe o nome do usuário: ")
     usuario["tipo"] = input("Informe o tipo do usuário (aluno, professor, etc.): ")
@@ -34,6 +124,7 @@ def cadastrar_usuario():
     usuarios.append(usuario.copy())
 
 while conf:
+    limpar_tela()
     print('''BiblioPy
           
         1 - Cadastrar livro
